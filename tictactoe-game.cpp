@@ -6,6 +6,8 @@
 #include <cctype>
 #include <cstdlib> 
 #include <ctime> 
+#include <random>
+
 using namespace std;
 
 string input[3][3] = {
@@ -73,10 +75,20 @@ void ComputerPlay() {
 	do
 	{
 		invalid = true;
-		srand(static_cast<unsigned int>(std::time(0)));
+		/*srand(static_cast<unsigned int>(std::time(0)));
 
 		int randomX = rand() % 3 + 1;
-		int randomY = rand() % 3 + 1;
+		int randomY = rand() % 3 + 1;*/
+
+		random_device rd;
+		mt19937 generator(rd());
+
+		uniform_int_distribution<int> distribution(0, 2);
+
+		int randomX = distribution(generator);
+		int randomY = distribution(generator);
+
+
 
 		if (input[randomX][randomY] == " ") {
 			input[randomX][randomY] = ComputerXO;
@@ -114,30 +126,30 @@ void CalculateResult() {
 		int Diagonal2CounterX = 0;
 		int Diagonal1CounterO = 0;
 		int Diagonal2CounterO = 0;
+	
 
-		// Diagonal Win
+
+
 
 		for (int i = 0; i < 3; i++) {
-			for (int j = 2; j == 0; j--) {
-				if (input[i][j] == "X") {
-					Diagonal2CounterX++;
-				}
-				if (input[i][j] == "O") {
-					Diagonal2CounterO++;
-				}
-			}
+
+			// Diagonal Win
+
 			if (input[i][i] == "X") {
 				Diagonal1CounterX++;
 			}
 			if (input[i][i] == "O") {
 				Diagonal1CounterO++;
 			}
-		}
+			if (input[i][2-i] == "X") {
+				Diagonal2CounterX++;
+			}
+			if (input[i][2-i] == "O") {
+				Diagonal2CounterO++;
+			}
 
-		// Same Line Win
+			// Same Line Win
 
-
-		for (int i = 0; i < 3; i++) {
 			if (input[0][i] == "X") {
 				Row1counterX++;
 			}
@@ -157,12 +169,12 @@ void CalculateResult() {
 				Row3counterO++;
 			}
 		}
-		if (Row1counterX == 3 || Row2counterX == 3 || Row3counterX == 3) {
+		if (Row1counterX == 3 || Row2counterX == 3 || Row3counterX == 3 || Diagonal1CounterX == 3 || Diagonal2CounterX == 3) {
 			cout << "PLAYER X WON CONGRATZ!" << endl;
 			drawBoard();
 			GameOver = true;
 		}
-		if (Row1counterO == 3 || Row2counterO == 3 || Row3counterO == 3) {
+		if (Row1counterO == 3 || Row2counterO == 3 || Row3counterO == 3 || Diagonal1CounterO == 3 || Diagonal2CounterO == 3) {
 			cout << "PLAYER O WON CONGRATZ!" << endl;
 			drawBoard();
 			GameOver = true;
@@ -236,6 +248,7 @@ int main()
 			}
 			
 			cout << "==============================================" << endl;
+			CalculateResult();
 			
 
 			
@@ -268,6 +281,20 @@ int main()
 		else if (PlayingValue == "N") {
 			Playing = false;
 		}
+
+		Round = 0;
+		input[0][0] = " ";
+		input[0][1] = " ";
+		input[0][2] = " ";
+		input[1][0] = " ";
+		input[1][1] = " ";
+		input[1][2] = " ";
+		input[2][0] = " ";
+		input[2][1] = " ";
+		input[2][2] = " ";
+
+		drawBoard();
+
 	}
 	
 
